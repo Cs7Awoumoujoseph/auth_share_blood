@@ -4,6 +4,7 @@ import com.jojo.authentification_blood_share.Repository.DonneursRepository;
 import com.jojo.authentification_blood_share.Repository.GovernmentRepository;
 import com.jojo.authentification_blood_share.Repository.RolesRepository;
 import com.jojo.authentification_blood_share.Repository.VerificationTokenRepository;
+import com.jojo.authentification_blood_share.config_env.AppConfig;
 import com.jojo.authentification_blood_share.entities.Donneurs;
 import com.jojo.authentification_blood_share.entities.Government;
 import com.jojo.authentification_blood_share.entities.Hopital;
@@ -39,12 +40,19 @@ public class GovernmentServiceImpl implements GovernmentService {
     @Autowired
     VerificationTokenRepository verificationTokenRepository;
 
+
+    private final AppConfig appConfig;//pour le mdp secret
+
+    public GovernmentServiceImpl(AppConfig appConfig) {
+        this.appConfig = appConfig;
+    }
+
     @Override
     public Government registerGov(GovernmentRegister requete) {
         Optional<Government> optionalGovernment = governmentRepository.findByEmail(requete.getEmail());
         if(optionalGovernment.isPresent())
             throw new EmailAlreadyExistsException("email déjà existant!");
-        if(!Objects.equals(requete.password, "KOLIU-24KZWR4")) throw new EmailAlreadyExistsException("Mouf Mot de passe Gouvernement errone");
+        if(!Objects.equals(requete.password, appConfig.getSecretPassword())) throw new EmailAlreadyExistsException("Mouf Mot de passe Gouvernement errone");
         Government nouveauGouvernement = new Government();
         nouveauGouvernement.setUsername(requete.getUsername());
         nouveauGouvernement.setEmail(requete.getEmail());

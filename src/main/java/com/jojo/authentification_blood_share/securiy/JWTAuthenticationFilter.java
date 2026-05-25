@@ -6,8 +6,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jojo.authentification_blood_share.Repository.UsersRepository;
+import com.jojo.authentification_blood_share.config_env.JwtConfig;
 import com.jojo.authentification_blood_share.entities.Users;
-import com.jojo.authentification_blood_share.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,19 +23,20 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
-import static com.jojo.authentification_blood_share.securiy.SecParams.EXP_TIME;
-import static com.jojo.authentification_blood_share.securiy.SecParams.SECRET;
 
 //UsernamePasswordAuthenticationFilter est une classe de spring boot....pas ma classe
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private UsersRepository usersRepository; //on veut sauvegarder la date de connection
+    private final JwtConfig jwtConfig; //pour les var denvironnement du secret token et expiration date
+
 
     private AuthenticationManager authenticationManager;
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, UsersRepository usersRepository) {
+    public JWTAuthenticationFilter(JwtConfig jwtConfig,AuthenticationManager authenticationManager, UsersRepository usersRepository) {
         super();
         this.authenticationManager = authenticationManager;
         this.usersRepository = usersRepository; //injection de dependance par le constructeur ou lieu de authowired
+        this.jwtConfig = jwtConfig;
     }
 
     @Override
@@ -80,8 +81,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String jwt = JWT.create().
                 withSubject(springUser.getUsername()).
                 withArrayClaim("roles", roles.toArray(new String[roles.size()])).
-                withExpiresAt(new Date(System.currentTimeMillis()+EXP_TIME)).
-                sign(Algorithm.HMAC256(SECRET));
+                withExpiresAt(new Date(System.currentTimeMillis()+jwtConfig.getExpiration())).
+                sign(Algorithm.HMAC256(jwtConfig.getSecret()));
         response.addHeader("Authorization", jwt);
     }
 

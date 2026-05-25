@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.jojo.authentification_blood_share.config_env.JwtConfig;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,11 @@ import java.util.Collection;
 import java.util.List;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
+    private final JwtConfig jwtConfig;
+
+    public JWTAuthorizationFilter(JwtConfig jwtConfig) {
+        this.jwtConfig = jwtConfig;
+    }
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain)
@@ -30,7 +36,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SecParams.SECRET)).build();
+        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(jwtConfig.getSecret())).build();
 //enlever le préfixe Bearer du jwt
         jwt= jwt.substring(7); // 7 caractères dans "Bearer "
         DecodedJWT decodedJWT = verifier.verify(jwt);

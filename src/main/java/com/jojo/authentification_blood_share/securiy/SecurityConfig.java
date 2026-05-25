@@ -1,6 +1,7 @@
 package com.jojo.authentification_blood_share.securiy;
 
 import com.jojo.authentification_blood_share.Repository.UsersRepository;
+import com.jojo.authentification_blood_share.config_env.JwtConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,10 @@ public class SecurityConfig {
     @Autowired
     UsersRepository usersRepository; //pour enregistere dans la chaine lw nouveau filtre qui nous a permis de stocker la date et heure
 
+    @Autowired
+    JwtConfig jwtConfig;
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws
             Exception {
@@ -41,8 +46,7 @@ public class SecurityConfig {
                                                                           request) {
                         CorsConfiguration cors = new CorsConfiguration();
 
-                        cors.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-                        cors.setAllowedMethods(Collections.singletonList("*"));
+                        cors.setAllowedOriginPatterns(Collections.singletonList("*"));//acces par tout les url                        cors.setAllowedMethods(Collections.singletonList("*"));
                         cors.setAllowCredentials(true);
                         cors.setAllowedHeaders(Collections.singletonList("*"));
 
@@ -66,10 +70,10 @@ public class SecurityConfig {
 
 
                                 .anyRequest().authenticated() )
-       .addFilterBefore(new JWTAuthenticationFilter (agr,usersRepository),
-                UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new
-                        JWTAuthorizationFilter(),UsernamePasswordAuthenticationFilter.class);
+       .addFilterBefore(new JWTAuthenticationFilter (jwtConfig,agr,usersRepository),
+                UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+  
 }
