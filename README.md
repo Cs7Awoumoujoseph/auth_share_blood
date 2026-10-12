@@ -73,7 +73,7 @@ L'application attend les variables d'environnement suivantes. Utilisez des valeu
 | `MAIL_PASS` | Mot de passe ou secret SMTP |
 | `PORT` | Port HTTP, facultatif (8080 par défaut) |
 
-L'application utilise le chemin de contexte `/auth). Préparez la base de données et configurez tous les paramètres requis avant de démarrer le serveur.
+L'application utilise le chemin de contexte `/auth`.  Préparez la base de données et configurez tous les paramètres requis avant de démarrer le serveur.
 
 ## Installation et lancement
 
@@ -104,7 +104,7 @@ Pour générer l'artefact :
 ./mvnw clean package
 ```
 
-Le serveur écoute sur le port configuré, par défaut `8080). Le chemin de contexte est `/auth`; les chemins complets des endpoints dépendent des mappings des contrôleurs.
+Le serveur écoute sur le port configuré, par défaut `8080`. Le chemin de contexte est `/auth`; les chemins complets des endpoints dépendent des mappings des contrôleurs.
 
 ## Courriels
 
