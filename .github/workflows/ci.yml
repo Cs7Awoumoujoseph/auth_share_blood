@@ -32,10 +32,10 @@ jobs:
       DB_URL: jdbc:postgresql://localhost:5432/blood_share
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
-      SPRING_MAIL_HOST: localhost
-      SPRING_MAIL_PORT: 1025
-      SPRING_MAIL_USERNAME: ci@example.test
-      SPRING_MAIL_PASSWORD: ci-placeholder
+      MAIL_USERNAME: ci@example.test
+      MAIL_PASS: ci-test-placeholder-not-for-production
+      JWT_SECRET: ci-only-signing-secret-with-sufficient-length-123456789
+      JWT_EXPIRATION: 3600000
       APP_SECRET_GOVPASS: ci-test-placeholder-not-for-production
     steps:
       - name: Checkout repository
