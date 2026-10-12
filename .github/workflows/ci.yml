@@ -36,6 +36,7 @@ jobs:
       SPRING_MAIL_PORT: 1025
       SPRING_MAIL_USERNAME: ci@example.test
       SPRING_MAIL_PASSWORD: ci-placeholder
+      APP_SECRET_GOVPASS: ci-test-placeholder-not-for-production
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
